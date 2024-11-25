@@ -1,29 +1,28 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
-from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
 app = FastAPI()
 
-#Handing CORS and middleware
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # MongoDB connection with SSL settings
-
 MONGO_URI = os.getenv('MONGODB_URI')
 
 try:
-    # Initialize MongoDB client with SSL settings
-    client = MongoClient(MONGO_URI, ssl=True)
+    # Initialize MongoDB client with simpler SSL settings
+    client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
     # Test the connection
     client.admin.command('ping')
     print("Successfully connected to MongoDB!")
@@ -51,5 +50,5 @@ async def get_transactions():
         transactions = list(collection.find())
         return {"transactions": [serialize_doc(txn) for txn in transactions]}
     except Exception as e:
-        print(f"Error fetching transactions: {e}")  # Add this for debugging
+        print(f"Error fetching transactions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
