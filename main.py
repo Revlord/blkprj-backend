@@ -21,7 +21,7 @@ app.add_middleware(
 MONGO_URI = os.getenv('MONGODB_URI')
 
 try:
-    # Initialize MongoDB client with simpler SSL settings
+    # Initialize MongoDB client with SSL settings
     client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
     # Test the connection
     client.admin.command('ping')
@@ -52,3 +52,8 @@ async def get_transactions():
     except Exception as e:
         print(f"Error fetching transactions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv('PORT', 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
