@@ -1,0 +1,18 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+env/
+venv/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
